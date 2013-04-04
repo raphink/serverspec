@@ -1,6 +1,9 @@
+require 'puppet'
+require 'puppet/type/file'
+
 RSpec::Matchers.define :be_mode do |mode|
   match do |file|
-    ret = ssh_exec(commands.check_mode(file, mode))
-    ret[:exit_code] == 0
+    f = Puppet::Type::File.new(:name => file, :mode => mode)
+    f.insync?(f.retrieve)
   end
 end
