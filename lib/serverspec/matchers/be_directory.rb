@@ -1,6 +1,9 @@
+require 'puppet'
+require 'puppet/type/file'
+
 RSpec::Matchers.define :be_directory do
   match do |actual|
-    ret = ssh_exec(commands.check_directory(actual))
-    ret[:exit_code] == 0
+    d = Puppet::Type::File.new(:name => actual, :ensure => 'directory')
+    d.insync?(d.retrieve)
   end
 end

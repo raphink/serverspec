@@ -1,6 +1,9 @@
+require 'puppet'
+require 'puppet/type/service'
+
 RSpec::Matchers.define :be_enabled do
   match do |actual|
-    ret = ssh_exec(commands.check_enabled(actual))
-    ret[:exit_code] == 0
+    s = Puppet::Type::Service.new(:name => actual, :enable => 'true')
+    s.insync?(s.retrieve)
   end
 end

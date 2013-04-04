@@ -5,7 +5,10 @@ RSpec::Matchers.define :be_installed do
   match do |actual|
      p = Puppet::Type::Package.new(:name => actual)
      p_real = p.retrieve
-     return false unless p.exists?
-     p.insync?(p_real)
+     if p.exists?
+       p.insync?(p_real)
+     else
+       false
+     end
   end
 end
