@@ -32,6 +32,15 @@ shared_examples_for 'support be_running matcher' do |valid_service|
     describe 'this-is-invalid-daemon' do
       it { should_not be_running }
     end
+
+    describe valid_service do
+      before :all do
+        RSpec.configure do |c|
+          c.stdout = "#{valid_service} is stopped\r\n"
+        end
+      end
+      it { should be_running }
+    end
   end
 end
 
@@ -79,6 +88,42 @@ shared_examples_for 'support contain matcher' do |valid_file, pattern|
 
     describe '/etc/ssh/sshd_config' do
       it { should_not contain 'This is invalid text!!' }
+    end
+  end
+end
+
+shared_examples_for 'support contain.from.to matcher' do |valid_file, pattern, from, to|
+  describe 'contain' do
+    describe valid_file do
+      it { should contain(pattern).from(from).to(to) }
+    end
+
+    describe '/etc/ssh/sshd_config' do
+      it { should_not contain('This is invalid text!!').from(from).to(to) }
+    end
+  end
+end
+
+shared_examples_for 'support contain.after matcher' do |valid_file, pattern, after|
+  describe 'contain' do
+    describe valid_file do
+      it { should contain(pattern).after(after) }
+    end
+
+    describe '/etc/ssh/sshd_config' do
+      it { should_not contain('This is invalid text!!').after(after) }
+    end
+  end
+end
+
+shared_examples_for 'support contain.before matcher' do |valid_file, pattern, before|
+  describe 'contain' do
+    describe valid_file do
+      it { should contain(pattern).before(before) }
+    end
+
+    describe '/etc/ssh/sshd_config' do
+      it { should_not contain('This is invalid text!!').before(before) }
     end
   end
 end

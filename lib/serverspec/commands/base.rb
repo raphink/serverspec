@@ -36,11 +36,18 @@ module Serverspec
       end
 
       def check_process process
-        "ps -e | grep -qw #{process}"
+        "ps aux | grep -w #{process} | grep -qv grep"
       end
 
       def check_file_contain file, expected_pattern
         "grep -q '#{expected_pattern}' #{file}"
+      end
+
+      def check_file_contain_within file, expected_pattern, from=nil, to=nil
+        from ||= '1'
+        to ||= '$'
+        checker = check_file_contain("-", expected_pattern)
+        "sed -n '#{from},#{to}p' #{file} | #{checker}"
       end
 
       def check_mode file, mode
