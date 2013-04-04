@@ -45,7 +45,7 @@ module Serverspec
   end
 
   module ExecHelper
-    def do_check(cmd, opts={})
+    def do_check(cmd, opt={})
       stdout = `#{cmd} 2>&1`
       # In ruby 1.9, it is possible to use Open3.capture3, but not in 1.8
       #stdout, stderr, status = Open3.capture3(cmd)
