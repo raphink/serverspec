@@ -1,7 +1,6 @@
 RSpec::Matchers.define :have_iptables_rule do |rule|
   match do |iptables|
-    ret = ssh_exec(commands.check_iptables_rule(rule, @table, @chain))
-    ret[:exit_code] == 0
+    do_check(commands.check_iptables_rule(rule, @table, @chain))
   end
   chain :with_table do |table|
     @table = table

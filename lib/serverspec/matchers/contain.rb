@@ -5,8 +5,7 @@ RSpec::Matchers.define :contain do |pattern|
     else
       cmd = commands.check_file_contain_within(file, pattern, @from, @to)
     end
-    ret = ssh_exec(cmd)
-    ret[:exit_code] == 0
+    do_check(cmd)
   end
   # for contain(pattern).from(/A/).to(/B/)
   chain :from do |from|
