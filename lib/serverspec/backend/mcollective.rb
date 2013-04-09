@@ -8,15 +8,17 @@ module Serverspec
       def method_missing(meth, *args, &block)
         if meth.to_s.match('check_(.*)')
           action = $1
-          values = *args
+          example, values = *args
           mc = rpcclient('spec')
           mc.progress = false
-          # TODO: Get host
-          host  = 'foo.example.com'
-          mc.fact_filter 'fqdn', host
+          example.metadata[:classes].each do |c|
+            mc.class_filter c
+          end
+          example.metadata[:facts].each do |f, v|
+            mc.fact_filter f, v
+          end
           status = true
           mc.check(:action => $1, :values => values).each do |resp|
-            # Could be useful if testing classes/groups of machines
             status = status && resp[:data][:passed]
           end
           status
