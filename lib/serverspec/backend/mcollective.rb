@@ -11,8 +11,12 @@ module Serverspec
           values = *args
           mc = rpcclient('spec')
           mc.progress = false
+          # TODO: Get host
+          host  = 'foo.example.com'
+          mc.fact_filter 'fqdn', host
           status = true
           mc.check(:action => $1, :values => values).each do |resp|
+            # Could be useful if testing classes/groups of machines
             status = status && resp[:data][:passed]
           end
           status
