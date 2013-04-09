@@ -96,6 +96,10 @@ module Serverspec
       def check_zfs zfs, property=nil, value=nil
         raise NotImplementedError.new
       end
+
+      def check_ami ami
+        "facter ec2_ami_id | grep '^#{ami}$'"
+      end
     end
   end
 end
