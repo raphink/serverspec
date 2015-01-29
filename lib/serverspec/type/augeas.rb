@@ -26,7 +26,9 @@ module Serverspec::Type
           conds << "'/#{parts.join('/')}'=~glob(.)"
           parts.pop
         end
-        @aug.rm("/augeas/load/*[count(incl[#{conds.join(' or ')}])=0]")
+        auto_path = "/augeas/load/*[count(incl[#{conds.join(' or ')}])=0]"
+        no_auto_path = "/augeas/load/*[count(incl[#{conds.join(' or ')}])!=0]"
+        @aug.rm(auto_path) unless @aug.match(no_auto_path).empty?
         @aug.load!
       end
       @aug
