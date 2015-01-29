@@ -3,7 +3,7 @@ module Serverspec::Type
     def match(count)
       require 'augeas'
       @aug ||= ::Augeas.open
-      @aug.match(@name).size
+      @aug.match(@name).size == count
     end
   end
 end
