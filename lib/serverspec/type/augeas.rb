@@ -1,7 +1,6 @@
 module Serverspec::Type
   class Augeas < Base
     def match(count)
-      require 'augeas'
       aug_handler.match(@name).size == count
     end
 
@@ -16,6 +15,7 @@ module Serverspec::Type
 
     private
     def aug_handler
+      require 'augeas'
       @aug ||= ::Augeas.open
     end
   end
