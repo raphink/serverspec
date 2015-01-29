@@ -9,7 +9,6 @@ module Serverspec::Type
     end
 
     def has_node?(path)
-      aug_handler.set('/augeas/context', @name)
       aug_handler.match(path).any?
     end
 
@@ -30,6 +29,7 @@ module Serverspec::Type
         no_auto_path = "/augeas/load/*[count(incl[#{conds.join(' or ')}])!=0]"
         @aug.rm(auto_path) unless @aug.match(no_auto_path).empty?
         @aug.load!
+        @aug.set('/augeas/context', @name)
       end
       @aug
     end
