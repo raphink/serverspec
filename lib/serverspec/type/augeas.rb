@@ -16,7 +16,20 @@ module Serverspec::Type
     private
     def aug_handler
       require 'augeas'
-      @aug ||= ::Augeas.open
+      unless @aug
+        @aug ||= ::Augeas.open(nil, nil, ::Augeas::NO_LOAD)
+        # Remove unnecessary lenses
+        # Cleanup path
+        parts = @name.split('/')[2..-1].map { |e| e.gsub(/\[[^\]]*\]/, '')  }
+        conds = []
+        until parts.empty?
+          conds << "'/#{parts.join('/')}'=~glob(.)"
+          parts.pop
+        end
+        @aug.rm("/augeas/load/*[count(incl[#{conds.join(' or ')}])=0]")
+        @aug.load!
+      end
+      @aug
     end
   end
 end
