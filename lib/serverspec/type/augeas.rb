@@ -13,7 +13,8 @@ module Serverspec::Type
 
     def has_node?(path)
       @aug ||= ::Augeas.open
-      @aug.match("#{@name}#{path}").any?
+      @aug.set('/augeas/context', @name)
+      @aug.match(path).any?
     end
   end
 end
