@@ -1,22 +1,22 @@
 module Serverspec::Type
   class Augeas < Base
-    def initialize
-      @aug = ::Augeas.open
-      super
-    end
-    
     def match(count)
       require 'augeas'
-      @aug.match(@name).size == count
+      aug_handler.match(@name).size == count
     end
 
     def value
-      @aug.get(@name)
+      aug_handler.get(@name)
     end
 
     def has_node?(path)
-      @aug.set('/augeas/context', @name)
-      @aug.match(path).any?
+      aug_handler.set('/augeas/context', @name)
+      aug_handler.match(path).any?
+    end
+
+    private
+    def aug_handler
+      @aug ||= ::Augeas.open
     end
   end
 end
